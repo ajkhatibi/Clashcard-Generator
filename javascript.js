@@ -1,93 +1,163 @@
 var command = process.argv[2];
-var mysql = require('mysql')
 var fs = require('fs');
 
 var connection = mysql.createConnection({
-  host     : '127.0.0.1',
+  host     : 'localhost',
   user     : 'root',
   password : 'Khatibi1!2',
-  database : 'animals_db'
+  database : 'flashcards'
 });
 
 connection.connect();
 
-if(command === 'table'){
-	var post  = {id: 1, title: 'Hello MySQL'};
-var query = connection.query('INSERT INTO posts SET ?', post, function(err, result) {
-  // Neat!
+function query(){
+	var mysql = require('mysql');
+	var connection = mysql.createConnection({
+  		host     : 'localhost',
+  		user     : 'root',
+  		password : 'Khatibi1!2',
+  		database : 'flashcards'
 });
-console.log(query.sql); // INSERT INTO posts SET `id` = 1, `title` = 'Hello MySQL'
-}
+
+connection.connect();
+connection.query('SELECT * FROM favorite_list' , function(err, rows, fields) {
+  if (err) throw err;
+
+  console.log('The solution is: ', rows[0]);
+  process.exit();
+});
+
+};
+
+
+connection.query('UPDATE favorite_list SET ? WHERE ?' , function(err, rows, fields) {
+  if (err) throw err;
+
+
+  console.log('The solution is: ', rows[0]);
+
+  process.exit();
+});
+
+connection.end();
+
  
 
 
-// fs.readFile('projectLog.txt', 'utf8', function(error, data){
-// 	var content = '';
-// 	if(error) return console.log(error);
-// 	content += data
+fs.readFile('projectLog.txt', 'utf8', function(error, data){
+	var content = '';
+	if(error) return console.log(error);
+	content += data
 	
-// 	if(typeof content === 'string'){
+	if(typeof content === 'string'){
 	
-// 	console.log(content.split(',')[1]);
-// 	var inquirer = require('inquirer');
-// 	inquirer.prompt([
-// 	{
-// 		name: 'firstQ',
-// 		message: content.split(',')[0]
-// 	},
-// 	{
-// 		name: 'secondQ',
-// 		message: content.split(',')[1]
-// 	},
-// 	{
-// 		name: 'restart',
-// 		message: 'Would you like to restart your flashcard study?'
-// 	}
-// 		]).then(function(answers){
-// 			if(answers.restart === 'yes'){
-// 				prompt();
-// 			}
+	console.log(content.split(',')[1]);
+	var inquirer = require('inquirer');
+	inquirer.prompt([
+	{
+		name: 'firstQ',
+		message: content.split(',')[0]
+	},
+	{
+		name: 'secondQ',
+		message: content.split(',')[1]
+	},
+	{
+		name: 'restart',
+		message: 'Would you like to restart your flashcard study?'
+	}
+		]).then(function(answers){
+			if(answers.restart === 'yes'){
+				prompt();
+			}
 
-// 		})
+		})
 
-// 	} else {
-// 		prompt();
-// 	}
+	} else {
+		prompt();
+	}
 
-// })
+})
 
-// function BasicFlashcard(front, back){
-// 	//something important here
-// 	this.front = front
-// 	this.back = back
-// }
+function BasicFlashcard(front, back){
+	//something important here
+	this.front = front
+	this.back = back
+}
 
-// function ClozeFlashcard(text, cloze){
-// 	//something important here
-// }
-
-
-// function saveToFile(){
-// 	var fs = require('fs');
-// 	var nodeArg = process.argv;
-// 	var string = '';
-// 	for(var i = 3; i < nodeArg.length; i++){
-// 	string += ' ' + nodeArg[i]
-// 	}
-// fs.writeFile('projectLog.txt', string, function(error){
-// 	if(error) return console.log(error);
-// 	console.log('string > projectLog.txt');
-// 	})
-// };
+function ClozeFlashcard(text, cloze){
+	//something important here
+}
 
 
-// function prompt(){
-// var inquirer = require('inquirer');
-// inquirer.prompt([
-// 	{name: 'phase one',
-// 	message: 'Would you like to begin your flashcard studies?',
-// 	choices: ['yes', 'no']
-// }, 
+function saveToFile(){
+	var fs = require('fs');
+	var nodeArg = process.argv;
+	var string = '';
+	for(var i = 3; i < nodeArg.length; i++){
+	string += ' ' + nodeArg[i]
+	}
+fs.writeFile('projectLog.txt', string, function(error){
+	if(error) return console.log(error);
+	console.log('string > projectLog.txt');
+	})
+};
+
+
+function prompt(){
+var inquirer = require('inquirer');
+inquirer.prompt([
+	{name: 'phase one',
+	message: 'Would you like to begin your flashcard studies?',
+	choices: ['yes', 'no']
+}]).then(function(answers){
+	if(answers === 'no'){
+		process.exit();
+	} else {
+		var inquirer = require('inquirer');
+		inquirer.prompt([
+				{
+					name: 'count',
+					message: 'How many questions would you like to make?'
+				}
+
+			]).then(function(answers){
+				var countNum = parseInt(answers.count)
+				for(var i = 0; i < countNum; i++){
+					var inquirer = require('inquirer');
+					inquirer.prompt([
+				{
+					name: 'q'i,
+					message: 'Type your question...'
+				},
+				{
+					name: 'a'i,
+					message: 'Type your answer....'
+				}
+
+			]).then(function(answers){
+				var fs = require('fs');
+				for(var i = 0; i < countNum; i++){
+					var iresponse = i;
+					var iresponse = new BasicFlashcard(answers.qi, answers.ai)
+					var array = push(iresponse.front)
+					fs.writeFile('projectLog.txt', array, function(error){
+					if(error) return console.log(error);
+					console.log('string > projectLog.txt');
+					})
+
+					
+
+
+				}
+
+			})
+				}
+			})
+	}
+
+
+}) 
 // {
 // 	name: 'Q1',
 // 	message: 'Q1: Type your question!',
@@ -141,9 +211,9 @@ console.log(query.sql); // INSERT INTO posts SET `id` = 1, `title` = 'Hello MySQ
 
 
 // })
-// };
+};
 
 
-// function flashCard(){
+function flashCard(){
 	
-// }
+}
